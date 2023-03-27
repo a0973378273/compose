@@ -14,7 +14,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,7 +49,11 @@ fun animation(name: String) {
     )
     ConstraintLayout{
         val (row1,row2) = createRefs()
-        Row {
+        Row (modifier = Modifier.constrainAs(row1){
+            top.linkTo(parent.top)
+            start.linkTo(row2.start)
+            end.linkTo(parent.end)
+        }){
             Text(text = "Row1 $name!")
             Text(text = "Row2 $name!")
             Column(Modifier.padding(top = extraPadding.coerceAtLeast(10.dp))) {
@@ -65,9 +68,17 @@ fun animation(name: String) {
             Row {
                 Text(text = "Row3 $name!")
             }
-            Box(modifier = Modifier.background(Color.Red).fillMaxWidth(),contentAlignment = Alignment.Center) {
+            Box(modifier = Modifier
+                .background(Color.Red)
+                .fillMaxWidth(),contentAlignment = Alignment.Center) {
                 Text(text = "Box1")
             }
+        }
+        Row(Modifier.constrainAs(row2){
+            top.linkTo(parent.top, margin = 10.dp)
+            start.linkTo(parent.start, margin = 10.dp)
+        }) {
+            Text("123")
         }
     }
 }
